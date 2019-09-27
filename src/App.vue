@@ -27,9 +27,9 @@
       <a-breadcrumb style="margin: 16px 0">
       </a-breadcrumb>
       <div :style="{ background: '#fff', padding: '24px', minHeight: '280px' }">
-        
-
       </div>
+      <div style="width: 400px"><Modal/></div>
+
     </a-layout-content>
     <a-layout-footer style="text-align: center">
       Ant Design ©2018 Created by Ant UED
@@ -38,9 +38,19 @@
 </template>
 
 <script>
+import Modal from './components/Modal'
 
 export default {
-  name: 'app'
+  name: 'app',
+  components: { Modal },
+  methods:{
+    onSearch (search, loading) {
+      loading(true);
+      if (search.length > 100 ){
+        loading(false)
+      }    
+    }
+  }
 }
 </script>
 
