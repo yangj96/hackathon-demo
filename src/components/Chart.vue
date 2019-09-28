@@ -135,7 +135,7 @@ export default {
                     break;
             }
                 
-            this.visualizedData.push(entry)
+            this.visualizedData.push(entry);
         }
     },
     initChart() {

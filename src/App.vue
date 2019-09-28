@@ -17,10 +17,10 @@
           <a-input-search
                   placeholder="Github Account"
                   style="width: 200px"
-                  @search="onSearch"></a-input-search>
+                  @search="showProfile"></a-input-search>
         </a-col>
         <a-col :span="8">
-          <div style="width: 400px"><Modal/></div>
+          <div style="display: hidden"><Modal id="test" ref="profile"/></div>
         </a-col>
     </a-layout-header>
     <a-layout-content>
@@ -40,6 +40,12 @@
   export default {
     name: 'app',
     components: { Modal, Network },
+    methods: {
+      showProfile() {
+        console.log("here");
+        this.$refs.profile.showModal();
+      }
+    }
     /*
     components: {TrendNetwork},
     data() {
