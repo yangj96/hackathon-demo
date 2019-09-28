@@ -4,7 +4,6 @@
 
 <script>
 import echarts from 'echarts'
-//import resize from './mixins/resize'
 
 export default {
   props: {
@@ -23,10 +22,12 @@ export default {
     height: {
       type: String,
       default: '280px'
-    }
+    },
+    radarData: Object
   },
   data() {
     return {
+      visualizedData: [],
       chart: null
     }
   },
@@ -57,7 +58,8 @@ export default {
     document.head.appendChild(recaptchaScript8)    
     let recaptchaScript9 = document.createElement('script')
     recaptchaScript.setAttribute('src', 'http://echarts.baidu.com/gallery/vendors/simplex.js')
-    document.head.appendChild(recaptchaScript9)    
+    document.head.appendChild(recaptchaScript9) 
+    this.generateData()   
     this.initChart()
   },
   beforeDestroy() {
@@ -68,11 +70,79 @@ export default {
     this.chart = null
   },
   methods: {
+    generateData() {
+        for (const [category, value] of Object.entries(this.$props.radarData)) {
+            let entry = {};
+            switch(category){
+                case 'BigData':
+                    entry = {
+                        value: [value.R, value.U, value.P],
+                        name: 'BigData',
+                        symbol: 'rect',
+                        symbolSize: 5,
+                        label: {
+                            normal: {
+                                show: true,
+                                formatter:function(params) {
+                                    return params.value;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case 'Backend':
+                    entry = {
+                        value: [value.R, value.U, value.P],
+                        name: 'Backend',
+                            areaStyle: {
+                                normal: {
+                                    color: 'rgba(255, 255, 255, 0.5)'
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    type: 'dashed'
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter:function(params) {
+                                        return params.value;
+                                    }
+                                }
+                            }
+                    }
+                    break;
+                case 'Android':
+                    entry = {
+                        value: [value.R, value.U, value.P],
+                        name: 'Android',
+                            areaStyle: {
+                                normal: {
+                                    color: 'rgba(200, 255, 255, 0.5)'
+                                }
+                            },
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter:function(params) {
+                                        return params.value;
+                                    }
+                                }
+                            }
+                    }
+                    break;
+            }
+                
+            this.visualizedData.push(entry)
+        }
+    },
     initChart() {
         this.chart = echarts.init(document.getElementById(this.id))
         this.chart.setOption({
             // title: {
-            //     text: '自定义雷达图'
+            //     text: ''
             // },
             legend: {
                 data: ['BigData','Backend', 'Android']
@@ -122,67 +192,12 @@ export default {
                     type: 'radar',
                     itemStyle: {
                         emphasis: {
-                            // color: 各异,
                             lineStyle: {
                                 width: 4
                             }
                         }
                     },
-                    data: [
-                        {
-                            value: [90, 90, 40],
-                            name: 'BigData',
-                            symbol: 'rect',
-                            symbolSize: 5,
-                            label: {
-                                normal: {
-                                    show: true,
-                                    formatter:function(params) {
-                                        return params.value;
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            value: [60, 50, 30],
-                            name: 'Backend',
-                            areaStyle: {
-                                normal: {
-                                    color: 'rgba(255, 255, 255, 0.5)'
-                                }
-                            },
-                            lineStyle: {
-                                normal: {
-                                    type: 'dashed'
-                                }
-                            },
-                            label: {
-                                normal: {
-                                    show: true,
-                                    formatter:function(params) {
-                                        return params.value;
-                                    }
-                                }
-                            }
-                        },
-                        {
-                            value: [20, 70, 80],
-                            name: 'Android',
-                            areaStyle: {
-                                normal: {
-                                    color: 'rgba(200, 255, 255, 0.5)'
-                                }
-                            },
-                            label: {
-                                normal: {
-                                    show: true,
-                                    formatter:function(params) {
-                                        return params.value;
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    data: this.visualizedData
                 }
             ]
         });
