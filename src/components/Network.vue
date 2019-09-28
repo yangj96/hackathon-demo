@@ -118,11 +118,11 @@
           timeout = setTimeout(function() {
             console.log("node was single clicked", new Date());
           }, 300)
+          singleClick(d.id)
         })
           .on("dblclick", function(d) {
             clearTimeout(timeout);
             console.log("node was double clicked", new Date());
-            singleClick(d.id)
           });
 
         node.call(
