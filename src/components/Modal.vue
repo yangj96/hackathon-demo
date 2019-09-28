@@ -36,15 +36,6 @@
 import Chart from './Chart'
 
 export default {
-  props: {
-    id: {
-      type: String,
-      default: 'yyx990801'
-    }
-  },
-  created: function() {
-    this.fetchProfileData();
-  },
   data() {
     return {
       visible: false,
@@ -90,16 +81,17 @@ export default {
   },
   components: {Chart},
   methods:{
-    showModal() {
+    showModal(id) {
+      this.fetchProfileData(id);
       this.visible = true
     },
     handleOk() {
       this.visible = false
     },
-    fetchProfileData: function() {
-      console.log(this.$getProfielUrl + this.$props.id);
+    fetchProfileData(id) {
+      console.log(this.$getProfielUrl + id);
       this.$http
-        .get(this.$getProfielUrl + this.$props.id, {
+        .get(this.$getProfielUrl + id, {
           headers: { Accept: "application/json" }
         })
         .then(
