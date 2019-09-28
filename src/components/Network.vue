@@ -27,17 +27,17 @@
         }
 
         let maxVal = 15
+        console.log(graph.nodes)
         graph.nodes.forEach(function (d, i) {
           maxVal = Math.max(maxVal, d.score)
         })
 
         graph.nodes.forEach(function (d, i) {
-          console.log(d.score)
-          let minVal = 5
-          if (d.score == null) d.score = minVal
+          let minVal = 0.1
+          if (d.score === null) d.score = minVal
+          d.score = (d.score - minVal ) / maxVal
           d.score = Math.max(d.score, minVal)
-          d.score = (d.score - minVal) / (maxVal - minVal)
-
+          // console.log(d.score)
           label.nodes.push({ node: d })
           label.nodes.push({ node: d })
           label.links.push({
@@ -97,7 +97,7 @@
           .enter()
           .append('line')
           .attr('stroke', '#aaa')
-          .attr('stroke-width', '1px')
+          .attr('stroke-width', '1.5px')
 
         let node = container.append('g').attr('class', 'nodes')
           .selectAll('g')
@@ -181,28 +181,48 @@
         }
 
         function focus (d) {
-          node.style('r', function (o) {
-            return o === d ? o.score * 55 : o.score * 40
-          })
           let index = d3.select(d3.event.target).datum().index
-          node.style('opacity', function (o) {
-            return neigh(index, o.index) ? 1 : 0.2
+          node.transition()
+            .delay(2)
+            .duration(300)
+            .style('opacity', function (o) {
+              return neigh(index, o.index) ? 1 : 0.3
+            })
+
+          node.style('r', function (o) {
+            return o === d ? o.score * 50 : o.score * 40
           })
-          labelNode.attr('display', function (o) {
+          labelNode.transition()
+            .delay(5)
+            .duration(300)
+            .attr('display', function (o) {
             return neigh(index, o.node.index) ? 'block' : 'none'
           })
-          link.style('opacity', function (o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0.2
+          link.transition()
+            .delay(2)
+            .duration(300)
+            .style('opacity', function (o) {
+            return o.source.index === index || o.target.index === index ? 1 : 0.3
           })
         }
 
         function unfocus (d) {
-          node.style('r', function (o) {
+          node.transition()
+            .delay(2)
+            .duration(300)
+            .style('r', function (o) {
             return o === d ? o.score * 40 : o.score * 40
-          })
-          labelNode.attr('display', 'block')
-          node.style('opacity', 1)
-          link.style('opacity', 1)
+          }).style('opacity', 1)
+          labelNode
+            .transition()
+            .delay(5)
+            .duration(300)
+            .attr('display', 'block')
+          link
+            .transition()
+            .delay(2)
+            .duration(300)
+            .style('opacity', 1)
         }
 
         function updateLink (link) {
