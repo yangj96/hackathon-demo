@@ -19,13 +19,20 @@
       let that = this
       let width = 1200
       let height = 800
-      let color = d3.scaleOrdinal(d3.schemeSpectral[9])
-      d3.json('http://localhost:8080/static/json/miserables.json').then(function (graph) {
+      let color = d3.scaleOrdinal(d3.schemePaired)
+      d3.json('http://localhost:8080/static/json/relations.json').then(function (graph) {
         let label = {
           'nodes': [],
           'links': []
         }
+
         graph.nodes.forEach(function (d, i) {
+          console.log(d.score)
+          let minVal = 5, maxVal = 310
+          if (d.score == null) d.score = minVal
+          d.score = Math.max(d.score, minVal)
+          d.score = (d.score - minVal) / (maxVal - minVal)
+
           label.nodes.push({ node: d })
           label.nodes.push({ node: d })
           label.links.push({
@@ -81,9 +88,9 @@
           .append('circle')
           .attr('r', function (d) {
             console.log(d)
-            return Math.ceil(Math.random()*40);
+            return d.score * 40
           })
-          .attr('fill', function (d) { return color(d.group) })
+          .attr('fill', function (d) { return color(Math.floor(Math.random() * 5)) })
 
         node.on('mouseover', focus).on('mouseout', unfocus)
 
@@ -95,13 +102,13 @@
             console.clear();
             console.log("node was single clicked", new Date());
           }, 300)
-          console.log(d.id)
-          singleClick(d.id)
         })
           .on("dblclick", function(d) {
             clearTimeout(timeout);
             console.clear();
             console.log("node was double clicked", new Date());
+            console.log(d.id)
+            singleClick(d.id)
           });
 
         node.call(
@@ -126,7 +133,7 @@
           .text(function (d, i) { return i % 2 === 0 ? '' : d.node.id })
           .style('fill', '#555')
           .style('font-family', 'Arial')
-          .style('font-size', 12)
+          .style('font-size', 14)
           .style('pointer-events', 'none') // to prevent mouseover/drag capture
 
         function ticked () {
