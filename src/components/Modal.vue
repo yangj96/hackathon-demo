@@ -9,18 +9,19 @@
     >
         <div class="basic-info" style="display: inline-block;
             position: relative;
-            bottom: 30px;">
+            bottom: 20px;">
             <div style="position: relative;
                 right: -10px;
-                bottom: 50px;">
+                bottom: 30px;">
                 <img id="profile-picture" :src="backendData.avatar_url" style="display: inline-block;">
                 <div style="display: inline-block;
                 position: relative;
                 right: -25px;
                 bottom: -25px;">
-                <a-icon type="star" theme="twoTone"/>  <strong>{{backendData.stars}}</strong></div>
+                    <a-icon type="rocket" /> <strong>{{Math.round(backendData.overall_score)}}</strong></div>
             </div>
 
+            <p><a-icon type="star" />  Stargazed by <strong>{{backendData.stars}}</strong> in all repos </p>
             <p><a-icon type="trophy" />  Published <strong>{{backendData.repos}}</strong> repos <strong>(Top {{backendData.repos_perc.toFixed(2)}}%)</strong></p>
             <p><a-icon type="fork" />  Forked by <strong>{{backendData.forks}}</strong> times <strong>(Top {{backendData.forks_perc.toFixed(2)}}%)</strong></p>
             <p><a-icon type="solution" />  <strong>{{backendData.pr}}</strong> Pull requests <strong>(Top {{backendData.pr_perc.toFixed(2)}}%)</strong></p>
@@ -145,8 +146,9 @@ svg {
     margin: 0 3px;
 }
 
-img {
-    width: 80px;
-    height: 80px;
-}
+    #profile-picture {
+        width: 80px;
+        height: 80px;
+        border-radius:5px;
+    }
 </style>
