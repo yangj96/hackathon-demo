@@ -38,28 +38,7 @@
 
   export default {
     name: 'app',
-    components: { Modal, Network },
-    /*
-    components: {TrendNetwork},
-    data() {
-      return {
-        loadData: {}
-      };
-    },
-    mounted() {
-      console.log("App loaded");
-      this.fetchData();
-    },*/
-    methods: {
-      /*
-      async fetchData() {
-        let data = await d3.json("./graph.json");
-        this.loadData = data;
-      } */
-      onSearch(keyword) {
-        this.$refs.network.searchClick(keyword)
-      }
-    }
+    components: { Modal, Network }
   }
 </script>
 
