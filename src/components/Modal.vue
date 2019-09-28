@@ -1,6 +1,5 @@
 <template>
     <div>
-    <a-button type="primary" @click="showModal">Open Modal</a-button>
     <a-modal
         id="profilepopup"
         :title="displayTitle"
@@ -21,11 +20,11 @@
                 bottom: -25px;">
                 <a-icon type="star" theme="twoTone"/>  <strong>{{backendData.stars}}</strong></div>
             </div>
-            
-            <p><a-icon type="trophy" />  Published <strong>{{backendData.repos}}</strong> repos <strong>(Top {{backendData.repos_perc}}%)</strong></p>
-            <p><a-icon type="fork" />  Forked by <strong>{{backendData.forks}}</strong> times <strong>(Top {{backendData.forks_perc}}%)</strong></p>
-            <p><a-icon type="solution" />  <strong>{{backendData.pr}}</strong> Pull requests <strong>(Top {{backendData.pr_perc}}%)</strong></p>
-            <p><a-icon type="tool" />  Solved <strong>{{backendData.solved_iss_prec}}%</strong> issues </p>
+
+            <p><a-icon type="trophy" />  Published <strong>{{backendData.repos}}</strong> repos <strong>(Top {{backendData.repos_perc.toFixed(2)}}%)</strong></p>
+            <p><a-icon type="fork" />  Forked by <strong>{{backendData.forks}}</strong> times <strong>(Top {{backendData.forks_perc.toFixed(2)}}%)</strong></p>
+            <p><a-icon type="solution" />  <strong>{{backendData.pr}}</strong> Pull requests <strong>(Top {{backendData.pr_perc.toFixed(2)}}%)</strong></p>
+            <p><a-icon type="tool" />  Solved <strong>{{(backendData.solved_iss_prec * 100).toFixed(2)}}%</strong> issues </p>
         </div>
         <div class="chart-plugin" style="display: inline-block; position: relative; right: -25px"><Chart :radarData="chartData" /></div>
     </a-modal>

@@ -16,11 +16,11 @@
       }
     },
     mounted () {
-      let that = this
-      let width = 1200
-      let height = 800
-      let color = d3.scaleOrdinal(d3.schemePaired)
-      d3.json('http://localhost:8080/static/json/relations.json').then(function (graph) {
+      let that = this;
+        let height = document.body.clientHeight;
+        let width = document.body.clientWidth-100;
+      let color = d3.scaleOrdinal(d3.schemePaired);
+      d3.json('/static/json/relations.json').then(function (graph) {
         let label = {
           'nodes': [],
           'links': []
