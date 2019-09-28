@@ -52,11 +52,11 @@
           .force('link', d3.forceLink(label.links).distance(0).strength(2))
 
         let graphLayout = d3.forceSimulation(graph.nodes)
-          .force('charge', d3.forceManyBody().strength(-3000))
+          .force('charge', d3.forceManyBody().strength(-2500))
           .force('center', d3.forceCenter(width / 2, height / 2))
           .force('x', d3.forceX(width / 2).strength(1))
           .force('y', d3.forceY(height / 2).strength(1))
-          .force('link', d3.forceLink(graph.links).id(function (d) { return d.id }).distance(50).strength(1))
+          .force('link', d3.forceLink(graph.links).id(function (d) { return d.id }).distance(30).strength(0.8))
           .on('tick', ticked)
 
         let adjlist = []

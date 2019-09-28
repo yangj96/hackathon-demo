@@ -26,7 +26,7 @@
             <p><a-icon type="solution" />  <strong>{{backendData.pr}}</strong> Pull requests <strong>(Top {{backendData.pr_perc.toFixed(2)}}%)</strong></p>
             <p><a-icon type="tool" />  Solved <strong>{{(backendData.solved_iss_prec * 100).toFixed(2)}}%</strong> issues </p>
         </div>
-        <div class="chart-plugin" style="display: inline-block; position: relative; right: -25px"><Chart :radarData="chartData" /></div>
+        <div class="chart-plugin" v-for="cd in chartData" style="display: inline-block; position: relative; right: -25px"><Chart :radarData="cd" /></div>
     </a-modal>
     </div>
 </template>
@@ -40,7 +40,7 @@ export default {
       visible: false,
       backendData:{},
       displayTitle: null,
-      chartData: {
+      chartData: [{
         BigData:{
           R: 90,
           U: 70,
@@ -56,7 +56,7 @@ export default {
           U: 60,
           P: 40
         }
-      }
+      }]
     }
   },
   components: {Chart},
@@ -70,7 +70,25 @@ export default {
       this.visible = false;
     },
     fetchProfileData(id) {
+        let that = this;
       console.log(this.$getProfielUrl + id);
+      let charD = {
+          BigData: {
+              R: 90,
+              U: 70,
+              P: 40
+          },
+          Backend: {
+              R: 20,
+              U: 30,
+              P: 50
+          },
+          Android: {
+              R: 30,
+              U: 60,
+              P: 40
+          }
+      }
       this.backendData = {}
       this.$http
         .get(this.$getProfielUrl + id, {
@@ -81,29 +99,29 @@ export default {
             this.backendData = response.data;
             this.displayTitle = this.backendData.name+"'s Ability Profile";
             if (this.backendData.backend_reputation+this.backendData.backend_usability+this.backendData.backend_proactivity >0){
-              this.chartData.Backend={
-                R:this.backendData.backend_reputation,
-                U:this.backendData.backend_usability,
-                P:this.backendData.backend_proactivity
+              charD.Backend={
+                R:this.backendData.backend_reputation.toFixed(1),
+                U:this.backendData.backend_usability.toFixed(1),
+                P:this.backendData.backend_proactivity.toFixed(1)
               };
-              console.log(this.chartData);
             }
             if (this.backendData.android_reputation+this.backendData.android_usability+this.backendData.android_proactivity >0){
-              this.chartData.Android={
-                R:this.backendData.android_reputation,
-                U:this.backendData.android_usability,
-                P:this.backendData.android_proactivity
+                charD.Android={
+                R:this.backendData.android_reputation.toFixed(1),
+                U:this.backendData.android_usability.toFixed(1),
+                P:this.backendData.android_proactivity.toFixed(1)
               };
-              console.log(this.chartData.Android);
             }
             if (this.backendData.bigdata_reputation+this.backendData.bigdata_usability+this.backendData.bigdata_proactivity >0){
-              this.chartData.BigData={
-                R:this.backendData.bigdata_reputation,
-                U:this.backendData.bigdata_usability,
-                P:this.backendData.bigdata_proactivity
+                charD.BigData={
+                R:this.backendData.bigdata_reputation.toFixed(1),
+                U:this.backendData.bigdata_usability.toFixed(1),
+                P:this.backendData.bigdata_proactivity.toFixed(1)
               };
-              console.log(this.chartData.BigData);
             }
+            console.log(charD);
+            that.chartData = [];
+              that.chartData.push(charD);
           },
           function(error) {
             console.log(error);
