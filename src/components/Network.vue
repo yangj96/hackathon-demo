@@ -1,7 +1,6 @@
 <template>
   <div>
     <svg id="viz"></svg>
-    <Modal ref="profile"></Modal>
   </div>
 </template>
 
@@ -11,11 +10,16 @@
   import * as d3 from 'd3'
   export default {
     name: 'Network',
+    methods: {
+      handleClick (d) {
+        this.$emit('openModal', d)
+      }
+    },
     mounted () {
       let width = 1200
-      let height = 600
+      let height = 800
       let color = d3.scaleOrdinal(d3.schemeSpectral[9])
-      d3.json('./json/miserables.json').then(function (graph) {
+      d3.json('http://localhost:8080/static/json/miserables.json').then(function (graph) {
         let label = {
           'nodes': [],
           'links': []
@@ -81,7 +85,23 @@
           .attr('fill', function (d) { return color(d.group) })
 
         node.on('mouseover', focus).on('mouseout', unfocus)
-          .on('dblclick', openModal)
+
+        let timeout = null;
+
+        node.on("click", function(d) {
+          clearTimeout(timeout);
+          timeout = setTimeout(function() {
+            console.clear();
+            console.log("node was single clicked", new Date());
+          }, 300)
+          console.log(d.id)
+          this.handleClick(d.id)
+        })
+          .on("dblclick", function(d) {
+            clearTimeout(timeout);
+            console.clear();
+            console.log("node was double clicked", new Date());
+          });
 
         node.call(
           d3.drag()
@@ -108,9 +128,6 @@
           labelLayout.alphaTarget(0.3).restart()
           labelNode.each(function (d, i) {
             if (i % 2 === 0) {
-
-              console.log("d.node.x")
-              console.log(d.node.x)
               d.x = d.node.x
               d.y = d.node.y
             } else {
@@ -138,6 +155,7 @@
         }
 
         function focus (d) {
+          console.log("focus")
           let index = d3.select(d3.event.target).datum().index
           node.style('opacity', function (o) {
             return neigh(index, o.index) ? 1 : 0.1
@@ -185,12 +203,6 @@
           if (!d3.event.active) graphLayout.alphaTarget(0)
           d.fx = null
           d.fy = null
-        }
-
-        function openModal (d) {
-          console.log(d.id)
-          this.$options.ref
-
         }
 
         function collide(alpha) {

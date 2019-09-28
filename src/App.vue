@@ -21,12 +21,12 @@
                   @search="showProfile"></a-input-search>
         </a-col>
         <a-col :span="8">
-          <div style="display: hidden"><Modal id="test" ref="profile"/></div>
+          <div :hidden="notDisplayProfile"> <Modal id="test" ref="profile" /></div>
         </a-col>
     </a-layout-header>
     <a-layout-content>
       <keep-alive>
-        <Network ref="network"></Network>
+        <Network ref="network" @openModal = "showProfile"></Network>
       </keep-alive>
     </a-layout-content>
   </a-layout>
@@ -39,10 +39,18 @@
   export default {
     name: 'app',
     components: { Modal, Network },
+    data: {
+      return() {
+        notDisplayProfile: true
+      }
+    },
     methods: {
       showProfile() {
         console.log("here");
         this.$refs.profile.showModal();
+      },
+      openModal(){
+        this.notDisplayProfile = false;
       }
     }
   }
