@@ -1,6 +1,7 @@
 <template>
   <div>
     <svg id="viz"></svg>
+    <Modal ref="profile"></Modal>
   </div>
 </template>
 
@@ -14,7 +15,7 @@
       let width = 1200
       let height = 600
       let color = d3.scaleOrdinal(d3.schemeSpectral[9])
-      d3.json('http://localhost:8080/json/miserables.json').then(function (graph) {
+      d3.json('json/miserables.json').then(function (graph) {
         let label = {
           'nodes': [],
           'links': []
@@ -29,6 +30,7 @@
         })
 
         let labelLayout = d3.forceSimulation(label.nodes)
+          .force("center", d3.forceCenter(width / 2, height / 2))
           .force('charge', d3.forceManyBody().strength(-50))
           .force('link', d3.forceLink(label.links).distance(0).strength(2))
 
@@ -79,6 +81,7 @@
           .attr('fill', function (d) { return color(d.group) })
 
         node.on('mouseover', focus).on('mouseout', unfocus)
+          .on('dblclick', openModal)
 
         node.call(
           d3.drag()
@@ -98,8 +101,6 @@
           .style('font-size', 12)
           .style('pointer-events', 'none') // to prevent mouseover/drag capture
 
-        node.on('mouseover', focus).on('mouseout', unfocus)
-
         function ticked () {
           node.call(updateNode)
           link.call(updateLink)
@@ -107,6 +108,9 @@
           labelLayout.alphaTarget(0.3).restart()
           labelNode.each(function (d, i) {
             if (i % 2 === 0) {
+
+              console.log("d.node.x")
+              console.log(d.node.x)
               d.x = d.node.x
               d.y = d.node.y
             } else {
@@ -181,6 +185,12 @@
           if (!d3.event.active) graphLayout.alphaTarget(0)
           d.fx = null
           d.fy = null
+        }
+
+        function openModal (d) {
+          console.log(d.id)
+          this.$options.ref
+
         }
 
         function collide(alpha) {
