@@ -45,6 +45,8 @@
             target: i * 2 + 1
           })
         })
+        console.log(width / 2)
+        console.log(height / 2)
 
         let labelLayout = d3.forceSimulation(label.nodes)
           .force("center", d3.forceCenter(width / 2, height / 2))
@@ -186,7 +188,7 @@
             .delay(2)
             .duration(300)
             .style('opacity', function (o) {
-              return neigh(index, o.index) ? 1 : 0.3
+              return neigh(index, o.index) ? 1 : 0.2
             })
 
           node.style('r', function (o) {
@@ -202,7 +204,7 @@
             .delay(2)
             .duration(300)
             .style('opacity', function (o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0.3
+            return o.source.index === index || o.target.index === index ? 1 : 0.2
           })
         }
 
