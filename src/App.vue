@@ -1,3 +1,4 @@
+<!--suppress ALL -->
 <template>
   <a-layout id="components-layout-demo-top" class="layout">
 
@@ -25,15 +26,13 @@
     </a-layout-header>
     <a-layout-content>
       <keep-alive>
-        <Network></Network>
+        <Network ref="network"></Network>
       </keep-alive>
     </a-layout-content>
   </a-layout>
 </template>
 
 <script type="text/javascript">
-  /* eslint-disable no-console
-  import * as d3 from "d3"*/
   import Network from "./components/Network";
   import Modal from './components/Modal'
 
@@ -46,23 +45,6 @@
         this.$refs.profile.showModal();
       }
     }
-    /*
-    components: {TrendNetwork},
-    data() {
-      return {
-        loadData: {}
-      };
-    },
-    mounted() {
-      console.log("App loaded");
-      this.fetchData();
-    },
-    methods: {
-      async fetchData() {
-        let data = await d3.json("./graph.json");
-        this.loadData = data;
-      }
-    }*/
   }
 </script>
 
