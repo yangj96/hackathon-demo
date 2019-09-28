@@ -5,13 +5,15 @@
 </template>
 
 <script>
+  /* eslint-disable no-console */
+
   import * as d3 from 'd3'
   export default {
     name: 'Network',
     mounted () {
-      let width = 1000
+      let width = 1200
       let height = 600
-      let color = d3.scaleOrdinal(d3.schemePaired)
+      let color = d3.scaleOrdinal(d3.schemeSpectral[9])
       d3.json('http://localhost:8080/json/miserables.json').then(function (graph) {
         let label = {
           'nodes': [],
@@ -70,7 +72,10 @@
           .data(graph.nodes)
           .enter()
           .append('circle')
-          .attr('r', 10)
+          .attr('r', function (d) {
+            console.log(d)
+            return Math.ceil(Math.random()*40);
+          })
           .attr('fill', function (d) { return color(d.group) })
 
         node.on('mouseover', focus).on('mouseout', unfocus)
@@ -118,6 +123,8 @@
               this.setAttribute('transform', 'translate(' + shiftX + ',' + shiftY + ')')
             }
           })
+
+          labelNode.each(collide(0.5))
           labelNode.call(updateNode)
         }
 
@@ -174,6 +181,35 @@
           if (!d3.event.active) graphLayout.alphaTarget(0)
           d.fx = null
           d.fy = null
+        }
+
+        function collide(alpha) {
+          let quadtree = d3.quadtree(graph.nodes);
+          return function(d) {
+            let radius = 400
+            let padding = 400
+            let rb = 2*radius + padding,
+              nx1 = d.x - rb,
+              nx2 = d.x + rb,
+              ny1 = d.y - rb,
+              ny2 = d.y + rb;
+
+            quadtree.visit(function(quad, x1, y1, x2, y2) {
+              if (quad.point && (quad.point !== d)) {
+                let x = d.x - quad.point.x,
+                  y = d.y - quad.point.y,
+                  l = Math.sqrt(x * x + y * y);
+                if (l < rb) {
+                  l = (l - rb) / l * alpha;
+                  d.x -= x *= l;
+                  d.y -= y *= l;
+                  quad.point.x += x;
+                  quad.point.y += y;
+                }
+              }
+              return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1;
+            });
+          };
         }
       })
     }
