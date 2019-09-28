@@ -6,7 +6,7 @@
         :title="displayTitle"
         v-model="visible"
         @ok="handleOk"
-        width="600px"
+        width="45%"
     >
         <div class="basic-info" style="display: inline-block;
             position: relative;
@@ -27,7 +27,7 @@
             <p><a-icon type="solution" />  <strong>{{backendData.pr}}</strong> Pull requests <strong>(Top {{backendData.pr_perc}}%)</strong></p>
             <p><a-icon type="tool" />  Solved <strong>{{backendData.solved_iss_prec}}%</strong> issues </p>
         </div>
-        <div class="chart-plugin" style="display: inline-block; position: relative; right: -25px"><Chart :radarData="chartData"/></div>
+        <div class="chart-plugin" style="display: inline-block; position: relative; right: -25px"><Chart :radarData="chartData" /></div>
     </a-modal>
     </div>
 </template>
@@ -40,42 +40,23 @@ export default {
     return {
       visible: false,
       backendData:{},
-      // basicInfo: {
-      //   'id': null,
-      //   'name': null,
-      //   'avatar_url': null,
-
-      //   'repos': 4,
-      //   'forks': 0,
-      //   'stars': 0,
-      //   'pr': 0,
-
-      //   'solved_iss_prec': 0,
-
-      //   'repos_perc': 0,
-      //   'forks_perc': 0,
-      //   'stars_perc': 0,
-      //   'pr_perc': 0,
-
-      //   'overall_score': 0,
-      // },
       displayTitle: null,
       chartData: {
-        // BigData:{
-        //   R: 90,
-        //   U: 70,
-        //   P: 40
-        // },
-        // Backend:{
-        //   R: 20,
-        //   U: 30,
-        //   P: 50
-        // },
-        // Android:{
-        //   R: 30,
-        //   U: 60,
-        //   P: 40
-        // }
+        BigData:{
+          R: 90,
+          U: 70,
+          P: 40
+        },
+        Backend:{
+          R: 20,
+          U: 30,
+          P: 50
+        },
+        Android:{
+          R: 30,
+          U: 60,
+          P: 40
+        }
       }
     }
   },
@@ -84,12 +65,14 @@ export default {
     showModal(id) {
       this.fetchProfileData(id);
       this.visible = true
+      console.log(this.chartData)
     },
     handleOk() {
-      this.visible = false
+      this.visible = false;
     },
     fetchProfileData(id) {
       console.log(this.$getProfielUrl + id);
+      this.backendData = {}
       this.$http
         .get(this.$getProfielUrl + id, {
           headers: { Accept: "application/json" }
@@ -103,21 +86,24 @@ export default {
                 R:this.backendData.backend_reputation,
                 U:this.backendData.backend_usability,
                 P:this.backendData.backend_proactivity
-              }
+              };
+              console.log(this.chartData);
             }
             if (this.backendData.android_reputation+this.backendData.android_usability+this.backendData.android_proactivity >0){
               this.chartData.Android={
                 R:this.backendData.android_reputation,
                 U:this.backendData.android_usability,
                 P:this.backendData.android_proactivity
-              }
+              };
+              console.log(this.chartData.Android);
             }
             if (this.backendData.bigdata_reputation+this.backendData.bigdata_usability+this.backendData.bigdata_proactivity >0){
               this.chartData.BigData={
                 R:this.backendData.bigdata_reputation,
                 U:this.backendData.bigdata_usability,
                 P:this.backendData.bigdata_proactivity
-              }
+              };
+              console.log(this.chartData.BigData);
             }
           },
           function(error) {

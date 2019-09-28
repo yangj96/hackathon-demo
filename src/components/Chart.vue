@@ -31,6 +31,16 @@ export default {
       chart: null
     }
   },
+  updated() {
+    console.log(radarData)
+    this.initChart()
+  },
+  watch: {
+    radarData(val) {
+      console.log(val)
+      this.initChart()
+    }
+  },
   mounted() {
     let recaptchaScript = document.createElement('script')
     recaptchaScript.setAttribute('src', 'http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js')
@@ -59,7 +69,6 @@ export default {
     let recaptchaScript9 = document.createElement('script')
     recaptchaScript.setAttribute('src', 'http://echarts.baidu.com/gallery/vendors/simplex.js')
     document.head.appendChild(recaptchaScript9) 
-    this.generateData()   
     this.initChart()
   },
   beforeDestroy() {
@@ -139,6 +148,7 @@ export default {
         }
     },
     initChart() {
+        this.generateData()   
         this.chart = echarts.init(document.getElementById(this.id))
         this.chart.setOption({
             // title: {
