@@ -15,7 +15,7 @@
       let height = 600
       let color = d3.scaleOrdinal(d3.schemeSpectral[9])
       //d3.json('./json/miserables.json').then(function (graph) {
-        d3.json('http://localhost:8080/json/miserables.json').then(function (graph) {
+        d3.json('./json/miserables.json').then(function (graph) {
         let label = {
           'nodes': [],
           'links': []
