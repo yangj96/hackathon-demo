@@ -3,10 +3,10 @@
     <a-button type="primary" @click="showModal">Open Modal</a-button>
     <a-modal
         id="profilepopup"
-        title="XXX's Ability Profile"
+        :title="displayTitle"
         v-model="visible"
         @ok="handleOk"
-        width="570px"
+        width="600px"
     >
         <div class="basic-info" style="display: inline-block;
             position: relative;
@@ -19,15 +19,15 @@
                 position: relative;
                 right: -25px;
                 bottom: -25px;">
-                <a-icon type="star" theme="twoTone"/>  <strong>3</strong></div>
+                <a-icon type="star" theme="twoTone"/>  <strong>{{basicInfo.stars}}</strong></div>
             </div>
             
-            <p><a-icon type="trophy" />  Published <strong>3</strong> repos</p>
-            <p><a-icon type="fork" />  Forked by <strong>3</strong> times</p>
-            <p><a-icon type="solution" />  <strong>15</strong> Pull requests</p>
-            <p><a-icon type="tool" />  Solved <strong>20%</strong> issues</p>
+            <p><a-icon type="trophy" />  Published <strong>{{basicInfo.repos}}</strong> repos <strong>(Top {{basicInfo.repos_perc}}%)</strong></p>
+            <p><a-icon type="fork" />  Forked by <strong>{{basicInfo.forks}}</strong> times <strong>(Top {{basicInfo.forks_perc}}%)</strong></p>
+            <p><a-icon type="solution" />  <strong>{{basicInfo.pr}}</strong> Pull requests <strong>(Top {{basicInfo.pr_perc}}%)</strong></p>
+            <p><a-icon type="tool" />  Solved <strong>{{basicInfo.solved_iss_prec}}%</strong> issues </p>
         </div>
-        <div class="chart-plugin" style="display: inline-block; position: relative; right: -40px"><Chart/></div>
+        <div class="chart-plugin" style="display: inline-block; position: relative; right: -25px"><Chart :radarData="chartData"/></div>
     </a-modal>
     </div>
 </template>
@@ -36,9 +36,56 @@
 import Chart from './Chart'
 
 export default {
+  props: {
+    id: {
+      type: String,
+      default: 'yyx990801'
+    }
+  },
+  created: function() {
+    this.fetchProfileData();
+  },
   data() {
     return {
       visible: false,
+      backendData:{},
+      basicInfo: {
+        'id': null,
+        'name': null,
+        'avatar_url': null,
+
+        'repos': 4,
+        'forks': 0,
+        'stars': 0,
+        'pr': 0,
+
+        'solved_iss_prec': 0,
+
+        'repos_perc': 0,
+        'forks_perc': 0,
+        'stars_perc': 0,
+        'pr_perc': 0,
+
+        'overall_score': 0,
+      },
+      displayTitle: null,
+      chartData: {
+        BigData:{
+          R: 90,
+          U: 70,
+          P: 40
+        },
+        Backend:{
+          R: 20,
+          U: 30,
+          P: 50
+        },
+        Android:{
+          R: 30,
+          U: 60,
+          P: 40
+        }
+      }
     }
   },
   components: {Chart},
@@ -48,7 +95,24 @@ export default {
     },
     handleOk() {
       this.visible = false
-    }
+    },
+    fetchProfileData: function() {
+      console.log(this.$getProfielUrl + this.$props.id);
+      this.$http
+        .get(this.$getProfielUrl + this.$props.id, {
+          headers: { Accept: "application/json" }
+        })
+        .then(
+          function(response) {
+            this.backendData = response.data;
+            this.backendData.name = "sample";
+            this.displayTitle = this.backendData.name+"'s Ability Profile"
+          },
+          function(error) {
+            console.log(error);
+          }
+        );
+    },
   }
 }
 </script>
