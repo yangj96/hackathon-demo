@@ -10,6 +10,8 @@
   "dependencies": {
     "ant-design-vue": "^1.2.4",
     "core-js": "^2.6.5",
+    "d3": "^5.12.0",
+    "d3-tip": "^0.9.1",
     "echarts": "^4.3.0",
     "vue": "^2.6.10"
   },
