@@ -26,9 +26,14 @@
           'links': []
         }
 
+        let maxVal = 15
+        graph.nodes.forEach(function (d, i) {
+          maxVal = Math.max(maxVal, d.score)
+        })
+
         graph.nodes.forEach(function (d, i) {
           console.log(d.score)
-          let minVal = 5, maxVal = 310
+          let minVal = 5
           if (d.score == null) d.score = minVal
           d.score = Math.max(d.score, minVal)
           d.score = (d.score - minVal) / (maxVal - minVal)
@@ -70,8 +75,21 @@
         svg.call(
           d3.zoom()
             .scaleExtent([.1, 4]) // eslint-disable-line
-            .on('zoom', function () { container.attr('transform', d3.event.transform) })
+            .on('zoom', function () {
+              // let e = event || window.event;
+              // stopDefault(e);
+              container.attr('transform', d3.event.transform)
+            })
         )
+
+        /*
+        function stopDefault(e) {
+          if (e && e.preventDefault)
+            e.preventDefault();
+          else
+            window.event.returnValue = false;
+          return false;
+        }*/
 
         let link = container.append('g').attr('class', 'links')
           .selectAll('line')
@@ -87,7 +105,6 @@
           .enter()
           .append('circle')
           .attr('r', function (d) {
-            console.log(d)
             return d.score * 40
           })
           .attr('fill', function (d) { return color(Math.floor(Math.random() * 5)) })
@@ -99,15 +116,12 @@
         node.on("click", function(d) {
           clearTimeout(timeout);
           timeout = setTimeout(function() {
-            console.clear();
             console.log("node was single clicked", new Date());
           }, 300)
         })
           .on("dblclick", function(d) {
             clearTimeout(timeout);
-            console.clear();
             console.log("node was double clicked", new Date());
-            console.log(d.id)
             singleClick(d.id)
           });
 
@@ -119,9 +133,6 @@
         )
 
         function singleClick(val) {
-          console.log("mounted single click")
-          console.log(val)
-          console.log(that)
           that.handleClick(val)
         }
 
@@ -170,20 +181,25 @@
         }
 
         function focus (d) {
-          console.log("focus")
+          node.style('r', function (o) {
+            return o === d ? o.score * 55 : o.score * 40
+          })
           let index = d3.select(d3.event.target).datum().index
           node.style('opacity', function (o) {
-            return neigh(index, o.index) ? 1 : 0.1
+            return neigh(index, o.index) ? 1 : 0.2
           })
           labelNode.attr('display', function (o) {
             return neigh(index, o.node.index) ? 'block' : 'none'
           })
           link.style('opacity', function (o) {
-            return o.source.index === index || o.target.index === index ? 1 : 0.1
+            return o.source.index === index || o.target.index === index ? 1 : 0.2
           })
         }
 
-        function unfocus () {
+        function unfocus (d) {
+          node.style('r', function (o) {
+            return o === d ? o.score * 40 : o.score * 40
+          })
           labelNode.attr('display', 'block')
           node.style('opacity', 1)
           link.style('opacity', 1)
