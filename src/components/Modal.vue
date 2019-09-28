@@ -5,7 +5,7 @@
         :title="displayTitle"
         v-model="visible"
         @ok="handleOk"
-        width="45%"
+        width="50%"
     >
         <div class="basic-info" style="display: inline-block;
             position: relative;
@@ -18,10 +18,10 @@
                 position: relative;
                 right: -25px;
                 bottom: -25px;">
-                    <a-icon type="rocket" /> <strong>{{Math.round(backendData.overall_score)}}</strong></div>
+                    <a-icon type="rocket" /> <h1><strong>{{Math.round(backendData.overall_score)}}</strong></h1></div>
             </div>
 
-            <p><a-icon type="star" />  Stargazed by <strong>{{backendData.stars}}</strong> in all repos </p>
+            <p><a-icon type="star" />  Stargazed by <strong>{{backendData.stars}}</strong> in all repos <strong>(Top {{backendData.stars_perc.toFixed(2)}}%)</strong></p>
             <p><a-icon type="trophy" />  Published <strong>{{backendData.repos}}</strong> repos <strong>(Top {{backendData.repos_perc.toFixed(2)}}%)</strong></p>
             <p><a-icon type="fork" />  Forked by <strong>{{backendData.forks}}</strong> times <strong>(Top {{backendData.forks_perc.toFixed(2)}}%)</strong></p>
             <p><a-icon type="solution" />  <strong>{{backendData.pr}}</strong> Pull requests <strong>(Top {{backendData.pr_perc.toFixed(2)}}%)</strong></p>
