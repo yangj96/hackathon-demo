@@ -10,12 +10,17 @@
   import * as d3 from 'd3'
   export default {
     name: 'Network',
+    methods: {
+      handleClick (d) {
+        this.$emit('openModal', d)
+      }
+    },
     mounted () {
+      let that = this
       let width = 1200
-      let height = 600
+      let height = 800
       let color = d3.scaleOrdinal(d3.schemeSpectral[9])
-      //d3.json('./json/miserables.json').then(function (graph) {
-        d3.json('./json/miserables.json').then(function (graph) {
+      d3.json('http://localhost:8080/static/json/miserables.json').then(function (graph) {
         let label = {
           'nodes': [],
           'links': []
@@ -30,6 +35,7 @@
         })
 
         let labelLayout = d3.forceSimulation(label.nodes)
+          .force("center", d3.forceCenter(width / 2, height / 2))
           .force('charge', d3.forceManyBody().strength(-50))
           .force('link', d3.forceLink(label.links).distance(0).strength(2))
 
@@ -81,12 +87,36 @@
 
         node.on('mouseover', focus).on('mouseout', unfocus)
 
+        let timeout = null;
+
+        node.on("click", function(d) {
+          clearTimeout(timeout);
+          timeout = setTimeout(function() {
+            console.clear();
+            console.log("node was single clicked", new Date());
+          }, 300)
+          console.log(d.id)
+          singleClick(d.id)
+        })
+          .on("dblclick", function(d) {
+            clearTimeout(timeout);
+            console.clear();
+            console.log("node was double clicked", new Date());
+          });
+
         node.call(
           d3.drag()
             .on('start', dragstarted)
             .on('drag', dragged)
             .on('end', dragended)
         )
+
+        function singleClick(val) {
+          console.log("mounted single click")
+          console.log(val)
+          console.log(that)
+          that.handleClick(val)
+        }
 
         let labelNode = container.append('g').attr('class', 'labelNodes')
           .selectAll('text')
@@ -98,8 +128,6 @@
           .style('font-family', 'Arial')
           .style('font-size', 12)
           .style('pointer-events', 'none') // to prevent mouseover/drag capture
-
-        node.on('mouseover', focus).on('mouseout', unfocus)
 
         function ticked () {
           node.call(updateNode)
@@ -135,6 +163,7 @@
         }
 
         function focus (d) {
+          console.log("focus")
           let index = d3.select(d3.event.target).datum().index
           node.style('opacity', function (o) {
             return neigh(index, o.index) ? 1 : 0.1

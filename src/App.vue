@@ -26,7 +26,7 @@
     </a-layout-header>
     <a-layout-content>
       <keep-alive>
-        <Network ref="network"></Network>
+        <Network ref="network" @openModal = "showProfile"></Network>
       </keep-alive>
     </a-layout-content>
   </a-layout>
@@ -39,6 +39,11 @@
   export default {
     name: 'app',
     components: { Modal, Network },
+    data: {
+      return() {
+        notDisplayProfile: true
+      }
+    },
     methods: {
       showProfile(value, event) {
         console.log(value);
