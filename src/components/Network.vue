@@ -16,6 +16,7 @@
       }
     },
     mounted () {
+      let that = this
       let width = 1200
       let height = 800
       let color = d3.scaleOrdinal(d3.schemeSpectral[9])
@@ -95,7 +96,7 @@
             console.log("node was single clicked", new Date());
           }, 300)
           console.log(d.id)
-          this.handleClick(d.id)
+          singleClick(d.id)
         })
           .on("dblclick", function(d) {
             clearTimeout(timeout);
@@ -109,6 +110,13 @@
             .on('drag', dragged)
             .on('end', dragended)
         )
+
+        function singleClick(val) {
+          console.log("mounted single click")
+          console.log(val)
+          console.log(that)
+          that.handleClick(val)
+        }
 
         let labelNode = container.append('g').attr('class', 'labelNodes')
           .selectAll('text')
