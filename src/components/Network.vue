@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg id="viz" viewBox="0 64 1280 536" preserveAspectRatio="xMinYMin slice"></svg>
+    <svg id="viz"></svg>
   </div>
 </template>
 
@@ -18,8 +18,8 @@
     },
     mounted() {
       let that = this;
-      let height = 536
-      let width = 1280
+      let height = window.innerHeight;
+      let width = window.innerWidth;
       let color = d3.scaleOrdinal(d3.schemePaired);
       let globalNode = null;
       d3.json('/static/json/relations.json').then(function (graph) {
