@@ -16,9 +16,11 @@
                 <img id="profile-picture" :src="backendData.avatar_url" style="display: inline-block;">
                 <div style="display: inline-block;
                 position: relative;
-                right: -25px;
+                right: -60px;
                 bottom: -25px;">
-                    <a-icon type="rocket" /> <h1><strong>{{Math.round(backendData.overall_score)}}</strong></h1></div>
+                <h3><strong style="font-size: -webkit-xxx-large;">{{Math.round(backendData.overall_score)}}</strong>/100</h3>
+                <!-- <p style="margin: 0px 0px 0px 0px">Score</p> -->
+                </div>
             </div>
 
             <p><a-icon type="star" />  Stargazed by <strong>{{backendData.stars}}</strong> in all repos <strong>(Top {{backendData.stars_perc.toFixed(2)}}%)</strong></p>
