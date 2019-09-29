@@ -18,7 +18,7 @@
           <a-input-search
                   placeholder="Github Account"
                   style="width: 200px"
-                  @search="showProfile"></a-input-search>
+                  @search=onSearch></a-input-search>
         </a-col>
         <a-col :span="8">
           <div style="display: hidden"><Modal ref="profile"/></div>
@@ -48,6 +48,9 @@
       showProfile(value, event) {
         console.log(value);
         this.$refs.profile.showModal(value);
+      },
+      onSearch(keyword) {
+        this.$refs.network.$emit('searchProfile', keyword)
       }
     }
   }
